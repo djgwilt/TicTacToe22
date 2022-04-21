@@ -8,5 +8,6 @@ g : play with the GUI
 t : play with the Terminal""")
     quit()
 
+# Added a comment
 if __name__ == "__main__":
     pass
