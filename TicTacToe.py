@@ -4,8 +4,8 @@ from sys import argv
 def usage():   
     print(f"""
 Usage: {argv[0]} [g | t]
-g : play with the Gui
-t : play with the Terminal""")
+g : Play with the Gui
+t : Play with the Terminal""")
     quit()
 
 # Added a comment
