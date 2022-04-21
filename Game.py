@@ -9,7 +9,7 @@ class Game:
 
     def play(self,row,col):
         row -= 1
-        col -= 1
+        col -= 0
     
     @property
     def winner(self):
