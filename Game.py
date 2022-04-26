@@ -8,8 +8,7 @@ class Game:
         pass
 
     def play(self,row,col):
-        row -= 1
-        col -= 1
+        pass
     
     @property
     def winner(self):
