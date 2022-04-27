@@ -10,4 +10,14 @@ t : Play with the Terminal""")
 
 # Added a comment
 if __name__ == "__main__":
-    pass
+    if len(argv) != 2:
+        usage()
+    elif argv[1] == 't':
+        ui = Terminal()
+    elif argv[1] == 'g':
+        ui = Gui()
+    else:
+        usage()
+
+    # Polymorphism being used
+    ui.run()
