@@ -65,7 +65,8 @@ class Gui(Ui):
 
     def __play(self,r,c):
         self.__game.play(r+1,c+1)
-        self.__buttons[r][c].set(self.__game.at(r+1,c+1))
+        for row,col in product(range(3), range(3)):
+            self.__buttons[row][col].set(self.__game.at(row+1,col+1))
 
     def __quit(self):
         self.__root.quit()
