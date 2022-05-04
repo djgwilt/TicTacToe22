@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from Game import Game, GameError
-from tkinter import Tk, Frame, Grid, N,S,E,W,Button, X, Y, Toplevel, StringVar, Scrollbar, Text, LEFT, RIGHT
+from tkinter import Tk, Frame, Grid, N,S,E,W,Button, END,X, Y, Toplevel, StringVar, Scrollbar, Text, LEFT, RIGHT
 from itertools import product
 class Ui(ABC):
 
@@ -10,6 +10,7 @@ class Ui(ABC):
 
 class Gui(Ui):
     def __init__(self):
+        self.__game_win = None
         root = Tk()
         root.title("Tic Tac Toe")
         frame = Frame(root)
@@ -42,11 +43,17 @@ class Gui(Ui):
         console.config(yscrollcommand=scroll.set)
 
         self.__root = root
+        self.__console = console # save the console for adding text later
 
     def __show_help(self):
         pass
 
     def __play_game(self):
+        # If the game window already exists, then pressing the play button should have no effect
+        if self.__game_win:
+            return
+
+        self.__finished = False
         self.__game = Game()
 
         game_win = Toplevel(self.__root)
@@ -78,13 +85,32 @@ class Gui(Ui):
             Grid.rowconfigure(frame, i, weight=1)
             Grid.columnconfigure(frame, i, weight=1)
 
-        Button(game_win, text="Dismiss", command=game_win.destroy).grid(row=1,column=0)
+        self.__game_win = game_win
+        Button(game_win, text="Dismiss", command=self.__dismiss_game_win).grid(row=1,column=0)
 
+    def __dismiss_game_win(self):
+        self.__game_win.destroy()
+        self.__game_win = None
 
     def __play(self,r,c):
-        self.__game.play(r+1,c+1)
+        # 5. When a game is won, subsequent clicks on buttons in the playing area should have no effect.
+        if self.__finished:
+            return
+
+        try:
+            self.__game.play(r+1,c+1)
+        except GameError as e:
+            self.__console.insert(END,f"{e}\n")
+
         for row,col in product(range(3), range(3)):
             self.__buttons[row][col].set(self.__game.at(row+1,col+1))
+
+        if self.__game.winner == Game.DRAW:
+            self.__console.insert(END,"Game is drawn\n")
+            self.__finished = True
+        elif self.__game.winner:
+            self.__console.insert(END,f"Game is won by {self.__game.winner}\n")
+            self.__finished = True
 
     def __quit(self):
         self.__root.quit()
